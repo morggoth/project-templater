@@ -18,17 +18,17 @@ func projectInit(projectType, projectPath string) {
 	}
 }
 
-func terraformProject(projeckPath string) {
+func terraformProject(projectPath string) {
 	terraformFiles := [...]string{"main.tf", "variables.tf", "output.tf"}
 	terraformDir := "terraform"
 
-	err := os.Mkdir(filepath.Join(projeckPath, terraformDir), 00755)
+	err := os.Mkdir(filepath.Join(projectPath, terraformDir), 00755)
 	if err != nil {
 		log.Print(err)
 	}
 
 	for i := range terraformFiles {
-		f, err := os.Create(filepath.Join(projeckPath, terraformDir, terraformFiles[i]))
+		f, err := os.Create(filepath.Join(projectPath, terraformDir, terraformFiles[i]))
 		if err != nil {
 			log.Print(err)
 		}
