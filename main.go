@@ -4,6 +4,8 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/go-git/go-git/v5"
 )
 
 func projectInit(projectType, projectPath string) {
@@ -12,6 +14,8 @@ func projectInit(projectType, projectPath string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	initGitRepo(projectPath)
 
 	if projectType == "terraform" {
 		terraformProject(projectPath)
@@ -34,6 +38,13 @@ func terraformProject(projectPath string) {
 		}
 
 		f.Close()
+	}
+}
+
+func initGitRepo(path string) {
+	_, err := git.PlainInit(path, false)
+	if err != nil {
+		log.Print(err)
 	}
 }
 
