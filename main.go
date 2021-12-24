@@ -8,12 +8,16 @@ import (
 	"github.com/go-git/go-git/v5"
 )
 
+func errCheck(err error) {
+	if err != nil {
+		log.Panic(err)
+	}
+}
+
 func projectInit(projectType, projectPath string) {
 
 	err := os.Mkdir(projectPath, 0755)
-	if err != nil {
-		log.Fatal(err)
-	}
+	errCheck(err)
 
 	initGitRepo(projectPath)
 
@@ -27,15 +31,11 @@ func terraformProject(projectPath string) {
 	terraformDir := "terraform"
 
 	err := os.Mkdir(filepath.Join(projectPath, terraformDir), 00755)
-	if err != nil {
-		log.Print(err)
-	}
+	errCheck(err)
 
 	for i := range terraformFiles {
 		f, err := os.Create(filepath.Join(projectPath, terraformDir, terraformFiles[i]))
-		if err != nil {
-			log.Print(err)
-		}
+		errCheck(err)
 
 		f.Close()
 	}
@@ -43,9 +43,7 @@ func terraformProject(projectPath string) {
 
 func initGitRepo(path string) {
 	_, err := git.PlainInit(path, false)
-	if err != nil {
-		log.Print(err)
-	}
+	errCheck(err)
 }
 
 func main() {
