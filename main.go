@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
 func errCheck(err error) {
@@ -24,6 +27,8 @@ func projectInit(projectType, projectPath string) {
 	if projectType == "terraform" {
 		terraformProject(projectPath)
 	}
+
+	addInitialCommit(projectPath)
 }
 
 func terraformProject(projectPath string) {
@@ -46,7 +51,30 @@ func initGitRepo(path string) {
 	errCheck(err)
 }
 
+func addInitialCommit(path string) {
+	r, err := git.PlainOpen(path)
+	errCheck(err)
+
+	w, err := r.Worktree()
+	errCheck(err)
+
+	_, err = w.Add(".")
+	errCheck(err)
+
+	status, err := w.Status()
+	errCheck(err)
+	fmt.Println(status)
+
+	_, err = w.Commit("Initial commit", &git.CommitOptions{
+		Author: &object.Signature{
+			Name:  "test",
+			Email: "test@test.com",
+			When:  time.Now(),
+		},
+	})
+	errCheck(err)
+}
+
 func main() {
 	projectInit("terraform", "test_dir")
-
 }
