@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
@@ -65,10 +66,14 @@ func addInitialCommit(path string) {
 	errCheck(err)
 	fmt.Println(status)
 
+	// Get local git-config, merged with global config
+	config, err := r.ConfigScoped(config.GlobalScope)
+	errCheck(err)
+
 	_, err = w.Commit("Initial commit", &git.CommitOptions{
 		Author: &object.Signature{
-			Name:  "test",
-			Email: "test@test.com",
+			Name:  config.User.Name,
+			Email: config.User.Email,
 			When:  time.Now(),
 		},
 	})
